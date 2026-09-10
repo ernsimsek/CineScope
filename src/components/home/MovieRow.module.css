@@ -1,0 +1,150 @@
+.section {
+  padding: var(--space-6) 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 12px;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--color-flare);
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-mercury);
+}
+
+.scroller {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding-bottom: var(--space-2);
+  cursor: grab;
+  user-select: none;
+  /* Hide default scrollbar completely */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE/old Edge */
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;                   /* Chrome/Safari */
+  width: 0;
+  height: 0;
+}
+
+/* Custom progress indicator below the row */
+.progressTrack {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  background: var(--color-line);
+  margin-top: var(--space-3);
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-flare);
+  box-shadow: 0 0 8px var(--color-flare-glow);
+  transition: width 0.15s linear;
+  will-change: width;
+}
+
+/* Hint that the row scrolls (only shown at edges via JS) */
+.edgeFade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.edgeFadeLeft {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-void), transparent);
+}
+
+.edgeFadeRight {
+  right: 0;
+  background: linear-gradient(-90deg, var(--color-void), transparent);
+}
+
+.rowWrapper {
+  position: relative;
+}
+
+.scroller.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.item {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+  .item {
+    flex: 0 0 160px;
+  }
+}
+
+.arrow {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-line);
+  color: var(--color-paper);
+  background: transparent;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.arrow:hover {
+  border-color: var(--color-flare);
+  color: var(--color-flare);
+}
+
+.arrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-1);
+}

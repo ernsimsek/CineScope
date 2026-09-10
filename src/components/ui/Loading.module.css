@@ -1,0 +1,63 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-7) 0;
+  color: var(--color-mercury);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-line);
+  border-top-color: var(--color-flare);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.skeletonCard {
+  background: var(--color-obsidian);
+  border: 1px solid var(--color-line);
+}
+
+.skeletonPoster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(
+    90deg,
+    var(--color-ash) 0%,
+    var(--color-mercury) 50%,
+    var(--color-ash) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+.skeletonLine {
+  height: 12px;
+  margin: var(--space-2) var(--space-2) 0;
+  background: var(--color-ash);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeletonLineShort {
+  width: 50%;
+}
