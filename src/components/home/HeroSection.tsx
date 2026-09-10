@@ -12,6 +12,9 @@ type Props = {
 };
 
 const SLIDE_MS = 6000;
+const FADE_MS = 420;
+/** w1280 is enough for hero — "original" (4K) causes decode jank on slide change */
+const BACKDROP_SIZE = "w1280";
 
 type IndicatorProps = {
   active: boolean;
@@ -94,22 +97,47 @@ function SlideIndicator({
 export default function HeroSection({ movies }: Props) {
   const top = movies.slice(0, 5);
   const [index, setIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
   const [cycleKey, setCycleKey] = useState(0);
 
+  useEffect(() => {
+    top.forEach((movie) => {
+      const url = getBackdropUrl(movie.backdrop_path, BACKDROP_SIZE);
+      if (!url) return;
+      const img = new Image();
+      img.decoding = "async";
+      img.src = url;
+    });
+  }, [top]);
+
+  useEffect(() => {
+    if (prevIndex === null) return;
+    const id = window.setTimeout(() => setPrevIndex(null), FADE_MS);
+    return () => window.clearTimeout(id);
+  }, [prevIndex, index]);
+
+  const changeSlide = useCallback(
+    (next: number) => {
+      if (next === index) return;
+      setPrevIndex(index);
+      setIndex(next);
+      setCycleKey((k) => k + 1);
+    },
+    [index],
+  );
+
   const advance = useCallback(() => {
     if (top.length < 2) return;
-    setIndex((prev) => (prev + 1) % top.length);
-    setCycleKey((k) => k + 1);
-  }, [top.length]);
+    changeSlide((index + 1) % top.length);
+  }, [top.length, index, changeSlide]);
 
   const goTo = useCallback(
     (i: number) => {
       if (i === index) return;
-      setIndex(i);
-      setCycleKey((k) => k + 1);
+      changeSlide(i);
     },
-    [index],
+    [index, changeSlide],
   );
 
   if (top.length === 0) return null;
@@ -117,7 +145,7 @@ export default function HeroSection({ movies }: Props) {
 
   return (
     <section
-      className={`${styles.hero} scanlines grain`}
+      className={styles.hero}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -128,23 +156,33 @@ export default function HeroSection({ movies }: Props) {
       }}
       aria-label="Featured films"
     >
-      {top.map((movie, i) => {
-        const bg = getBackdropUrl(movie.backdrop_path, "original");
-        return (
-          <div
-            key={movie.id}
-            className={`${styles.slide} ${i === index ? styles.slideActive : ""}`}
-            aria-hidden={i !== index}
-          >
+      <div className={styles.slideStack} aria-hidden>
+        {top.map((movie, i) => {
+          const isActive = i === index;
+          const isExit = i === prevIndex;
+          const bg = getBackdropUrl(movie.backdrop_path, BACKDROP_SIZE);
+
+          if (!isActive && !isExit) {
+            return (
+              <div key={movie.id} className={styles.slideHidden}>
+                {bg ? <div className={styles.bg} style={{ backgroundImage: `url(${bg})` }} /> : null}
+              </div>
+            );
+          }
+
+          return (
             <div
-              className={styles.bg}
-              style={bg ? { backgroundImage: `url(${bg})` } : undefined}
-            />
-          </div>
-        );
-      })}
+              key={movie.id}
+              className={`${styles.slide} ${isActive ? styles.slideActive : ""} ${isExit ? styles.slideExit : ""}`}
+            >
+              {bg ? <div className={styles.bg} style={{ backgroundImage: `url(${bg})` }} /> : null}
+            </div>
+          );
+        })}
+      </div>
 
       <div className={styles.vignette} aria-hidden />
+      <div className={styles.heroTexture} aria-hidden />
 
       <div className={styles.content}>
         <div className="container">

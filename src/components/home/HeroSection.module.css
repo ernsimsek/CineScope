@@ -8,17 +8,49 @@
   isolation: isolate;
 }
 
+.slideStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  contain: strict;
+}
+
+.slideHidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .slide {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+  contain: strict;
   pointer-events: none;
 }
 
 .slideActive {
-  opacity: 1;
-  pointer-events: auto;
+  z-index: 1;
+}
+
+.slideExit {
+  z-index: 2;
+  animation: slideExit var(--hero-fade-ms, 420ms) ease-out forwards;
+  will-change: opacity;
+}
+
+@keyframes slideExit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 .bg {
@@ -26,13 +58,8 @@
   inset: 0;
   background-size: cover;
   background-position: center top;
-  filter: brightness(0.6) contrast(1.05) saturate(0.95);
-  transform: scale(1.03);
-  transition: transform 8s linear;
-}
-
-.slideActive .bg {
-  transform: scale(1.0);
+  transform: translateZ(0) scale(1.04);
+  /* No CSS filter here — filter + fade forces main-thread repaints */
 }
 
 .vignette {
@@ -40,12 +67,29 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(10, 10, 10, 0.35) 0%,
-    rgba(10, 10, 10, 0.1) 35%,
-    rgba(10, 10, 10, 0.85) 80%,
+    rgba(10, 10, 10, 0.55) 0%,
+    rgba(10, 10, 10, 0.25) 35%,
+    rgba(10, 10, 10, 0.88) 80%,
     rgba(10, 10, 10, 1) 100%
   );
   z-index: 1;
+  pointer-events: none;
+}
+
+/* Lightweight static texture — avoids SVG feTurbulence + mix-blend on full viewport */
+.heroTexture {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.04) 0,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
 }
 
 .content {
@@ -167,18 +211,10 @@
   height: 1px;
   transform: translateY(-50%) scaleX(0);
   transform-origin: left center;
-  background: linear-gradient(
-    90deg,
-    var(--color-flare) 0%,
-    rgba(255, 120, 72, 0.95) 100%
-  );
+  background: var(--color-flare);
   will-change: transform;
   backface-visibility: hidden;
   pointer-events: none;
-}
-
-.dot2Active .dotProgress {
-  filter: drop-shadow(0 0 4px rgba(255, 77, 28, 0.55));
 }
 
 .yearChip {
@@ -258,8 +294,13 @@
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -268,5 +309,16 @@
   }
   .overview {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slideExit {
+    animation: none;
+    opacity: 0;
+  }
+
+  .scrollHint svg {
+    animation: none;
   }
 }
