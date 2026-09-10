@@ -123,40 +123,62 @@
   right: var(--gutter);
   z-index: 4;
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
 }
 
 .dot2 {
-  width: 32px;
-  height: 3px;
-  background: rgba(232, 228, 220, 0.28);
+  width: 40px;
+  height: 12px;
   border: none;
   padding: 0;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
+  background: transparent;
+}
+
+.dot2:hover .dotTrack {
+  background: rgba(232, 228, 220, 0.42);
+}
+
+.dot2Active .dotTrack {
+  background: rgba(232, 228, 220, 0.2);
+}
+
+.dotTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+  background: rgba(232, 228, 220, 0.26);
   transition: background var(--duration-fast) var(--ease-out);
-}
-
-.dot2:hover {
-  background: rgba(232, 228, 220, 0.5);
-}
-
-.dot2Active {
-  background: rgba(232, 228, 220, 0.18);
+  pointer-events: none;
 }
 
 .dotProgress {
   position: absolute;
   left: 0;
-  top: 0;
-  height: 100%;
-  width: 0%;
-  background: var(--color-flare);
-  box-shadow: 0 0 10px var(--color-flare-glow);
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    var(--color-flare) 0%,
+    rgba(255, 120, 72, 0.95) 100%
+  );
+  will-change: transform;
+  backface-visibility: hidden;
   pointer-events: none;
+}
+
+.dot2Active .dotProgress {
+  filter: drop-shadow(0 0 4px rgba(255, 77, 28, 0.55));
 }
 
 .yearChip {

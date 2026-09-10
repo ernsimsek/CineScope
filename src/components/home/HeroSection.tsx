@@ -31,6 +31,7 @@ function SlideIndicator({
   onComplete,
 }: IndicatorProps) {
   const progressRef = useRef<HTMLSpanElement>(null);
+  const animationRef = useRef<Animation | null>(null);
   const pausedRef = useRef(paused);
   const onCompleteRef = useRef(onComplete);
 
@@ -44,30 +45,36 @@ function SlideIndicator({
     const el = progressRef.current;
     if (!el) return;
 
-    el.style.width = "0%";
+    animationRef.current?.cancel();
+    el.style.transform = "translateY(-50%) scaleX(0)";
+
     const animation = el.animate(
-      [{ width: "0%" }, { width: "100%" }],
+      [
+        { transform: "translateY(-50%) scaleX(0)" },
+        { transform: "translateY(-50%) scaleX(1)" },
+      ],
       { duration: SLIDE_MS, fill: "forwards", easing: "linear" },
     );
+    animationRef.current = animation;
+
+    if (pausedRef.current) animation.pause();
 
     animation.onfinish = () => {
-      if (!pausedRef.current) {
-        onCompleteRef.current();
-      }
+      if (!pausedRef.current) onCompleteRef.current();
     };
 
-    return () => animation.cancel();
+    return () => {
+      animation.cancel();
+      animationRef.current = null;
+    };
   }, [active, cycleKey]);
 
   useEffect(() => {
-    if (!active) return;
-    const el = progressRef.current;
-    if (!el) return;
-    const [animation] = el.getAnimations();
-    if (!animation) return;
+    const animation = animationRef.current;
+    if (!animation || !active) return;
     if (paused) animation.pause();
     else animation.play();
-  }, [active, paused, cycleKey]);
+  }, [active, paused]);
 
   return (
     <button
@@ -78,6 +85,7 @@ function SlideIndicator({
       className={`${styles.dot2} ${active ? styles.dot2Active : ""}`}
       onClick={onSelect}
     >
+      <span className={styles.dotTrack} aria-hidden />
       {active ? <span ref={progressRef} className={styles.dotProgress} aria-hidden /> : null}
     </button>
   );
