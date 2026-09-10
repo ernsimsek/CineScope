@@ -32,6 +32,8 @@
   visibility: visible;
   contain: strict;
   pointer-events: none;
+  will-change: opacity;
+  backface-visibility: hidden;
 }
 
 .slideActive {
@@ -42,6 +44,7 @@
   z-index: 2;
   animation: slideExit var(--hero-fade-ms, 420ms) ease-out forwards;
   will-change: opacity;
+  backface-visibility: hidden;
 }
 
 @keyframes slideExit {
@@ -59,7 +62,8 @@
   background-size: cover;
   background-position: center top;
   transform: translateZ(0) scale(1.04);
-  /* No CSS filter here — filter + fade forces main-thread repaints */
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .vignette {

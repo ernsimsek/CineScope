@@ -7,12 +7,15 @@
   padding-top: env(safe-area-inset-top, 0px);
   z-index: 100;
   background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: border-color var(--duration-base) var(--ease-out),
     background var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
   border-bottom: 1px solid transparent;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .hidden {
@@ -244,6 +247,8 @@
   transition:
     transform var(--duration-base) var(--ease-out),
     opacity var(--duration-base) var(--ease-out);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mobileMenuOpen .mobilePanel {

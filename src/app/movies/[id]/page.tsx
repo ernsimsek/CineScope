@@ -28,7 +28,7 @@ export async function generateMetadata({
   const details = await safe(getMovieDetails(movieId), null);
   if (!details) return { title: "Film not found" };
 
-  const backdrop = getBackdropUrl(details.backdrop_path, "w1280");
+  const backdrop = getBackdropUrl(details.backdrop_path);
   return {
     title: details.title,
     description: details.overview?.slice(0, 200),

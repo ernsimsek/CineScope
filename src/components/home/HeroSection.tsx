@@ -12,9 +12,8 @@ type Props = {
 };
 
 const SLIDE_MS = 6000;
-const FADE_MS = 420;
-/** w1280 is enough for hero — "original" (4K) causes decode jank on slide change */
-const BACKDROP_SIZE = "w1280";
+const FADE_MS = 600;
+const BACKDROP_SIZE = "original";
 
 type IndicatorProps = {
   active: boolean;
@@ -146,6 +145,7 @@ export default function HeroSection({ movies }: Props) {
   return (
     <section
       className={styles.hero}
+      style={{ "--hero-fade-ms": `${FADE_MS}ms` } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}

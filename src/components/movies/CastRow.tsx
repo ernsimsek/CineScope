@@ -16,7 +16,7 @@ export default function CastRow({ cast, title = "Cast" }: Props) {
       <h2 className={styles.title}>{title}</h2>
       <div className={styles.row}>
         {cast.slice(0, 15).map((person) => {
-          const profile = getProfileUrl(person.profile_path, "w185");
+          const profile = getProfileUrl(person.profile_path, "w342");
           const initial = person.name?.[0] ?? "?";
           return (
             <div key={person.id} className={styles.member}>

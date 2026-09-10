@@ -70,7 +70,7 @@ export default function MovieDetailContent({
   const [trailerOpen, setTrailerOpen] = useState(false);
   const trailer = findTrailer(videos);
   const director = getDirector(crew);
-  const poster = getPosterUrl(movie.poster_path, "w500");
+  const poster = getPosterUrl(movie.poster_path);
 
   return (
     <div className="container">

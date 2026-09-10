@@ -13,14 +13,14 @@ export function getImageUrl(
   return `${IMAGE_BASE}/${size}${path}`;
 }
 
-export function getPosterUrl(path: string | null | undefined, size = "w342") {
+export function getPosterUrl(path: string | null | undefined, size = "w780") {
   return getImageUrl(path, size);
 }
 
-export function getBackdropUrl(path: string | null | undefined, size = "w1280") {
+export function getBackdropUrl(path: string | null | undefined, size = "original") {
   return getImageUrl(path, size);
 }
 
-export function getProfileUrl(path: string | null | undefined, size = "w185") {
+export function getProfileUrl(path: string | null | undefined, size = "w342") {
   return getImageUrl(path, size);
 }

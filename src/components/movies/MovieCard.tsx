@@ -18,7 +18,7 @@ export default function MovieCard({
   variant = "default",
   priority = false,
 }: MovieCardProps) {
-  const poster = getPosterUrl(movie.poster_path, "w500");
+  const poster = getPosterUrl(movie.poster_path);
 
   return (
     <Link href={`/movies/${movie.id}`} className={styles.card} aria-label={movie.title}>

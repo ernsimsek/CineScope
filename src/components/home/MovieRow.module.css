@@ -48,9 +48,10 @@
   padding-bottom: var(--space-2);
   cursor: grab;
   user-select: none;
-  /* Hide default scrollbar completely */
-  scrollbar-width: none;          /* Firefox */
-  -ms-overflow-style: none;       /* IE/old Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  will-change: scroll-position;
+  transform: translateZ(0);
 }
 
 .scroller::-webkit-scrollbar {
