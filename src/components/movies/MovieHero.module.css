@@ -1,0 +1,122 @@
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  align-items: flex-end;
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-5);
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-void);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 20%;
+  z-index: 0;
+}
+
+.fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.6) 0%,
+    rgba(10, 10, 10, 0.85) 60%,
+    rgba(10, 10, 10, 1) 100%
+  );
+  z-index: 1;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.eyebrow {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.yearChip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--color-flare);
+  color: var(--color-void);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.runtimeChip,
+.ratingChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-line);
+  color: var(--color-paper);
+  background: rgba(10, 10, 10, 0.4);
+}
+
+.ratingChip {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: var(--color-gold);
+}
+
+.ratingChip svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--color-gold);
+}
+
+.genrePill {
+  padding: 4px 12px;
+  border: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.genrePill:hover {
+  border-color: var(--color-flare);
+  color: var(--color-flare);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 0.92;
+  color: var(--color-paper);
+  margin-bottom: var(--space-2);
+  max-width: 18ch;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tagline {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--text-lg);
+  color: var(--color-paper-dim);
+  margin-bottom: var(--space-3);
+  max-width: 50ch;
+  line-height: 1.4;
+}

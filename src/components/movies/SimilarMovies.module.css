@@ -1,0 +1,44 @@
+.section {
+  padding: var(--space-5) 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 12px;
+  margin-bottom: var(--space-3);
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--color-flare);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: var(--space-2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.item {
+  flex: 0 0 200px;
+}
