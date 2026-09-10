@@ -12,7 +12,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.65s var(--ease-out);
+  transition: opacity 0.5s var(--ease-out);
   pointer-events: none;
 }
 
@@ -128,16 +128,16 @@
 }
 
 .dot2 {
-  width: 24px;
-  height: 2px;
-  background: rgba(232, 228, 220, 0.25);
+  width: 32px;
+  height: 3px;
+  background: rgba(232, 228, 220, 0.28);
   border: none;
   padding: 0;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: background var(--duration-base) var(--ease-out),
-    width var(--duration-base) var(--ease-out);
+  flex-shrink: 0;
+  transition: background var(--duration-fast) var(--ease-out);
 }
 
 .dot2:hover {
@@ -145,26 +145,18 @@
 }
 
 .dot2Active {
-  background: rgba(232, 228, 220, 0.15);
-  width: 36px;
+  background: rgba(232, 228, 220, 0.18);
 }
 
 .dotProgress {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
   background: var(--color-flare);
-  box-shadow: 0 0 12px var(--color-flare-glow);
-  transform-origin: left;
-  animation: fillProgress var(--hero-slide-duration, 6s) linear forwards;
-}
-
-.dotProgressPaused {
-  animation-play-state: paused;
-}
-
-@keyframes fillProgress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+  box-shadow: 0 0 10px var(--color-flare-glow);
+  pointer-events: none;
 }
 
 .yearChip {

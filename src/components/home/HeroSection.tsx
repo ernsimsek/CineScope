@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { TmdbMovie } from "@/lib/tmdb";
 import { getBackdropUrl } from "@/lib/tmdb-images";
 import { formatRuntime, formatYear, truncate } from "@/lib/utils";
@@ -11,32 +11,98 @@ type Props = {
   movies: TmdbMovie[];
 };
 
-/** Shared with `.dotProgress` animation via `--hero-slide-duration` */
 const SLIDE_MS = 6000;
+
+type IndicatorProps = {
+  active: boolean;
+  paused: boolean;
+  cycleKey: number;
+  label: string;
+  onSelect: () => void;
+  onComplete: () => void;
+};
+
+function SlideIndicator({
+  active,
+  paused,
+  cycleKey,
+  label,
+  onSelect,
+  onComplete,
+}: IndicatorProps) {
+  const progressRef = useRef<HTMLSpanElement>(null);
+  const pausedRef = useRef(paused);
+  const onCompleteRef = useRef(onComplete);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+    onCompleteRef.current = onComplete;
+  });
+
+  useEffect(() => {
+    if (!active) return;
+    const el = progressRef.current;
+    if (!el) return;
+
+    el.style.width = "0%";
+    const animation = el.animate(
+      [{ width: "0%" }, { width: "100%" }],
+      { duration: SLIDE_MS, fill: "forwards", easing: "linear" },
+    );
+
+    animation.onfinish = () => {
+      if (!pausedRef.current) {
+        onCompleteRef.current();
+      }
+    };
+
+    return () => animation.cancel();
+  }, [active, cycleKey]);
+
+  useEffect(() => {
+    if (!active) return;
+    const el = progressRef.current;
+    if (!el) return;
+    const [animation] = el.getAnimations();
+    if (!animation) return;
+    if (paused) animation.pause();
+    else animation.play();
+  }, [active, paused, cycleKey]);
+
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={active}
+      aria-label={label}
+      className={`${styles.dot2} ${active ? styles.dot2Active : ""}`}
+      onClick={onSelect}
+    >
+      {active ? <span ref={progressRef} className={styles.dotProgress} aria-hidden /> : null}
+    </button>
+  );
+}
 
 export default function HeroSection({ movies }: Props) {
   const top = movies.slice(0, 5);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [gen, setGen] = useState(0);
+  const [cycleKey, setCycleKey] = useState(0);
 
   const advance = useCallback(() => {
+    if (top.length < 2) return;
     setIndex((prev) => (prev + 1) % top.length);
-    setGen((g) => g + 1);
+    setCycleKey((k) => k + 1);
   }, [top.length]);
 
-  // Reset timer whenever the slide (or pause state) changes — stays in sync with progress bar
-  useEffect(() => {
-    if (top.length < 2 || paused) return;
-    const id = window.setTimeout(advance, SLIDE_MS);
-    return () => window.clearTimeout(id);
-  }, [index, gen, paused, top.length, advance]);
-
-  const goTo = (i: number) => {
-    if (i === index) return;
-    setIndex(i);
-    setGen((g) => g + 1);
-  };
+  const goTo = useCallback(
+    (i: number) => {
+      if (i === index) return;
+      setIndex(i);
+      setCycleKey((k) => k + 1);
+    },
+    [index],
+  );
 
   if (top.length === 0) return null;
   const current = top[index];
@@ -44,7 +110,6 @@ export default function HeroSection({ movies }: Props) {
   return (
     <section
       className={`${styles.hero} scanlines grain`}
-      style={{ ["--hero-slide-duration" as string]: `${SLIDE_MS}ms` }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -112,22 +177,15 @@ export default function HeroSection({ movies }: Props) {
 
       <div className={styles.indicatorRow} role="tablist" aria-label="Hero slides">
         {top.map((m, i) => (
-          <button
+          <SlideIndicator
             key={m.id}
-            type="button"
-            role="tab"
-            aria-selected={i === index}
-            aria-label={`Slide ${i + 1}: ${m.title}`}
-            className={`${styles.dot2} ${i === index ? styles.dot2Active : ""}`}
-            onClick={() => goTo(i)}
-          >
-            {i === index && (
-              <span
-                key={gen}
-                className={`${styles.dotProgress} ${paused ? styles.dotProgressPaused : ""}`}
-              />
-            )}
-          </button>
+            active={i === index}
+            paused={paused}
+            cycleKey={cycleKey}
+            label={`Slide ${i + 1}: ${m.title}`}
+            onSelect={() => goTo(i)}
+            onComplete={advance}
+          />
         ))}
       </div>
 
