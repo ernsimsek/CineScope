@@ -46,7 +46,7 @@ export default function NotFound() {
           maxWidth: 480,
         }}
       >
-        The reel has run out. The frame you're looking for has been cut from the print.
+        The reel has run out. The frame you&apos;re looking for has been cut from the print.
       </p>
       <Link href="/" className="btn btn-primary" style={{ marginTop: "var(--space-2)" }}>
         Return to the lobby

@@ -20,7 +20,10 @@ export default function SearchClient({ initialQuery, initialResults }: Props) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reqIdRef = useRef(0);
   const queryRef = useRef(query);
-  queryRef.current = query;
+
+  useEffect(() => {
+    queryRef.current = query;
+  });
 
   const doSearch = useCallback(async (q: string) => {
     const id = ++reqIdRef.current;
@@ -55,17 +58,12 @@ export default function SearchClient({ initialQuery, initialResults }: Props) {
     const trimmed = query.trim();
     if (trimmed === initialQuery.trim()) return;
 
-    setLoading(true);
-
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
+    const timer = setTimeout(() => {
       doSearch(trimmed);
       updateUrl(trimmed);
     }, 350);
 
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-    };
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 

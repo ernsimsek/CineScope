@@ -58,6 +58,7 @@ export default function BrowseClient({
     setMovies(initialMovies);
     setPage(initialPage);
     setTotalPages(initialTotalPages);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
   }, [initialMovies, initialPage, initialTotalPages]);
 
   const loadMore = useCallback(async () => {

@@ -38,7 +38,7 @@ export default function MovieHero({ movie }: Props) {
         </div>
 
         <h1 className={styles.title}>{movie.title}</h1>
-        {movie.tagline ? <p className={styles.tagline}>"{movie.tagline}"</p> : null}
+        {movie.tagline ? <p className={styles.tagline}>&quot;{movie.tagline}&quot;</p> : null}
       </div>
     </section>
   );
